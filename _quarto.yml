@@ -1,0 +1,14 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - index.qmd
+  resources:
+    - data/**
+website:
+  title: "Water infrastructure | IVI"
+  site-url: https://6aniel.github.io/linear_potable_water_asset_costs/
+format:
+  dashboard:
+    theme: cosmo
+    css: styles.css

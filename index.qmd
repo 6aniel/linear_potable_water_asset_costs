@@ -1,0 +1,102 @@
+---
+title: "Water infrastructure · IVI"
+format: dashboard
+---
+
+```{ojs}
+//| output: false
+csdRaw = FileAttachment("data/ivi_csd_year.csv").csv({typed: true})
+provinceRaw = FileAttachment("data/ivi_province_year.csv").csv({typed: true})
+csdData = csdRaw.filter(d => d.province && d.CSDNAME)
+provinceData = provinceRaw.filter(d => d.province)
+provinces = [...new Set(provinceData.map(d => d.province))].sort()
+```
+
+# Overview
+
+## {.sidebar}
+
+**Assessed water-pipe network**
+
+```{ojs}
+viewof province = Inputs.select(provinces, {label: "Province", value: "British Columbia"})
+viewof csd = Inputs.select(["Entire assessed province", ...new Set(csdData.filter(d => d.province === province).map(d => d.CSDNAME + " · " + d.CSDUID))].sort(), {label: "CSD", value: "Entire assessed province"})
+viewof year = Inputs.select([2025, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100], {label: "Evaluation year", value: 2025})
+```
+
+Replacement values are in **constant 2020 dollars**. Select a CSD to inspect its trajectory.
+
+Missing geography rows are excluded from this display. Coverage describes mapped length, not network completeness.
+
+```{ojs}
+//| output: false
+trajectory = csd === "Entire assessed province" ? provinceData.filter(d => d.province === province) : csdData.filter(d => d.province === province && d.CSDNAME + " · " + d.CSDUID === csd)
+selected = trajectory.find(d => d.year === year)
+number = (x, digits = 1) => x == null || !Number.isFinite(x) ? "No estimate" : x.toLocaleString("en-CA", {maximumFractionDigits: digits})
+```
+
+## Row {height=180}
+
+### Infrastructure value index
+
+```{ojs}
+html`<div class="metric">${number(selected?.IVI, 3)}</div><div class="metric-label">Remaining benchmark service-life fraction</div>`
+```
+
+### Service life consumed
+
+```{ojs}
+html`<div class="metric">${number(selected?.service_life_consumed_score)}${selected?.service_life_consumed_score == null ? "" : "%"}</div><div class="metric-label">100 × (1 − IVI)</div>`
+```
+
+### Assessed replacement value
+
+```{ojs}
+html`<div class="metric">${selected?.assessed_replacement_value == null ? "No estimate" : "$" + number(selected.assessed_replacement_value / 1e6) + "M"}</div><div class="metric-label">2020 dollars</div>`
+```
+
+## Row
+
+### IVI trajectory
+
+```{ojs}
+Plot.plot({height: 300, marginLeft: 55, x: {label: "Evaluation year", tickFormat: "d"}, y: {domain: [0, 1], label: "IVI"}, marks: [Plot.ruleY([0]), Plot.lineY(trajectory.filter(d => d.IVI != null), {x: "year", y: "IVI", stroke: "#147b80", strokeWidth: 3}), Plot.dot(trajectory.filter(d => d.year === year && d.IVI != null), {x: "year", y: "IVI", fill: "#d58935", r: 6})]})
+```
+
+### Coverage and benchmark-life exposure
+
+```{ojs}
+Inputs.table(selected ? [{"Mapped km": selected.mapped_length_m / 1000, "Assessed km": selected.assessed_length_m / 1000, "Age/lifespan coverage (%)": selected.age_lifespan_length_coverage == null ? null : selected.age_lifespan_length_coverage * 100, "Benchmark-life exposure ($M)": selected.benchmark_replacement_value == null ? null : selected.benchmark_replacement_value / 1e6, "Benchmark cost share (%)": selected.benchmark_cost_share == null ? null : selected.benchmark_cost_share * 100, "Excluded records": selected.excluded_records}] : [])
+```
+
+## Row
+
+### CSD comparison · selected province and year
+
+```{ojs}
+Inputs.table(csdData.filter(d => d.province === province && d.year === year).map(d => ({CSD: d.CSDNAME, CSDUID: String(d.CSDUID), IVI: d.IVI, "Consumed (%)": d.service_life_consumed_score, "Replacement value ($M)": d.assessed_replacement_value == null ? null : d.assessed_replacement_value / 1e6, "Age/lifespan coverage (%)": d.age_lifespan_length_coverage == null ? null : d.age_lifespan_length_coverage * 100})), {sort: "IVI", rows: 10})
+```
+
+# Methods & downloads
+
+## Row
+
+### Interpretation
+
+IVI is the summed remaining-life-adjusted replacement value divided by the summed replacement value of the same eligible observed pipes. A value of 0.4 indicates 40% of benchmark service life remains on average, after weighting.
+
+Provincial cost per metre uses **2020 CCPI replacement value divided by the full reported 2020 provincial inventory length**, matching All public organizations. It is not calculated from mapped or dated inventory. A uniform provincial rate cancels within CSD and province IVI, making these ratios effectively length-weighted.
+
+Benchmark-life exposure is cumulative replacement value reaching expected life by the selected year. It is not a forecast of annual spending or pipe failure. No renewal, removal or additions are simulated after the fixed 2025 cohort.
+
+### Limits and sources
+
+Municipal data take precedence where a CSD has measurable municipal lines, even if coverage is partial; ODI fills other CSDs. Ownership and pipe scope are not fully harmonized. Missing dates and lifespans can bias assessed results. Exact repeated records are removed, but source metadata cannot establish complete physical deduplication.
+
+Age/lifespan coverage is measured against mapped pipe length, not the complete network. Province results describe the observed sample. Benchmark lifespans are not measured condition. Cost rates do not distinguish diameter, material, depth or construction conditions.
+
+Sources: Statistics Canada CCPI tables **34-10-0284-01** and **34-10-0287-01**, processed municipal and ODI inventories, and 2021 CSD boundaries. The analysis uses a verified 2025 age baseline for the municipal files.
+
+- [Download CSD-year results](data/ivi_csd_year.csv)
+- [Download province-year results](data/ivi_province_year.csv)
+- [Download provincial cost rates](data/provincial_cost_per_m.csv)
