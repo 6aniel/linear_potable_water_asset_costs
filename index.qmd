@@ -63,18 +63,43 @@ html`<div class="metric">${selected?.assessed_replacement_value == null ? "No es
 Plot.plot({height: 300, marginLeft: 55, x: {label: "Evaluation year", tickFormat: "d"}, y: {domain: [0, 1], label: "IVI"}, marks: [Plot.ruleY([0]), Plot.lineY(trajectory.filter(d => d.IVI != null), {x: "year", y: "IVI", stroke: "#000000", strokeWidth: 3}), Plot.dot(trajectory.filter(d => d.year === year && d.IVI != null), {x: "year", y: "IVI", fill: "#000000", r: 6})]})
 ```
 
-### Coverage and benchmark-life exposure
+# Summary stats {scrolling=true}
+
+## Row {height=180}
+
+### Table controls
 
 ```{ojs}
-Inputs.table(selected ? [{"Mapped km": selected.mapped_length_m / 1000, "Assessed km": selected.assessed_length_m / 1000, "Age/lifespan coverage (%)": selected.age_lifespan_length_coverage == null ? null : selected.age_lifespan_length_coverage * 100, "Benchmark-life exposure ($M)": selected.benchmark_replacement_value == null ? null : selected.benchmark_replacement_value / 1e6, "Benchmark cost share (%)": selected.benchmark_cost_share == null ? null : selected.benchmark_cost_share * 100, "Excluded records": selected.excluded_records}] : [])
+viewof statsProvince = Inputs.select(provinces, {label: "Province", value: "British Columbia"})
+viewof statsYear = Inputs.select([2025, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100], {label: "Evaluation year", value: 2025})
 ```
 
-## Row
+## Row {height=360}
+
+### Provincial coverage and benchmark-life exposure
+
+```{ojs}
+//| output: false
+statsSelected = provinceData.find(d => d.province === statsProvince && d.year === statsYear)
+```
+
+```{ojs}
+Inputs.table(statsSelected ? [
+  {Metric: "Mapped pipe length (km)", Value: number(statsSelected.mapped_length_m / 1000)},
+  {Metric: "Assessed pipe length (km)", Value: number(statsSelected.assessed_length_m / 1000)},
+  {Metric: "Age/lifespan coverage (%)", Value: number(statsSelected.age_lifespan_length_coverage == null ? null : statsSelected.age_lifespan_length_coverage * 100)},
+  {Metric: "Replacement value reaching benchmark life ($M)", Value: number(statsSelected.benchmark_replacement_value == null ? null : statsSelected.benchmark_replacement_value / 1e6)},
+  {Metric: "Benchmark cost share (%)", Value: number(statsSelected.benchmark_cost_share == null ? null : statsSelected.benchmark_cost_share * 100)},
+  {Metric: "Excluded records", Value: number(statsSelected.excluded_records, 0)}
+] : [], {rows: 6})
+```
+
+## Row {height=560}
 
 ### CSD comparison · selected province and year
 
 ```{ojs}
-Inputs.table(csdData.filter(d => d.province === province && d.year === year).map(d => ({CSD: d.CSDNAME, CSDUID: String(d.CSDUID), IVI: d.IVI, "Consumed (%)": d.service_life_consumed_score, "Replacement value ($M)": d.assessed_replacement_value == null ? null : d.assessed_replacement_value / 1e6, "Age/lifespan coverage (%)": d.age_lifespan_length_coverage == null ? null : d.age_lifespan_length_coverage * 100})), {sort: "IVI", rows: 10})
+html`<div class="summary-table">${Inputs.table(csdData.filter(d => d.province === statsProvince && d.year === statsYear).map(d => ({CSD: d.CSDNAME, CSDUID: String(d.CSDUID), IVI: d.IVI, "Consumed (%)": d.service_life_consumed_score, "Replacement value ($M)": d.assessed_replacement_value == null ? null : d.assessed_replacement_value / 1e6, "Age/lifespan coverage (%)": d.age_lifespan_length_coverage == null ? null : d.age_lifespan_length_coverage * 100})), {sort: "IVI", rows: 15, width: 1100})}</div>`
 ```
 
 # Canada map
