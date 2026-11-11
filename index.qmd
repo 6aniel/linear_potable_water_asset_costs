@@ -60,7 +60,7 @@ html`<div class="metric">${selected?.assessed_replacement_value == null ? "No es
 ### IVI trajectory
 
 ```{ojs}
-Plot.plot({height: 300, marginLeft: 55, x: {label: "Evaluation year", tickFormat: "d"}, y: {domain: [0, 1], label: "IVI"}, marks: [Plot.ruleY([0]), Plot.lineY(trajectory.filter(d => d.IVI != null), {x: "year", y: "IVI", stroke: "#147b80", strokeWidth: 3}), Plot.dot(trajectory.filter(d => d.year === year && d.IVI != null), {x: "year", y: "IVI", fill: "#d58935", r: 6})]})
+Plot.plot({height: 300, marginLeft: 55, x: {label: "Evaluation year", tickFormat: "d"}, y: {domain: [0, 1], label: "IVI"}, marks: [Plot.ruleY([0]), Plot.lineY(trajectory.filter(d => d.IVI != null), {x: "year", y: "IVI", stroke: "#000000", strokeWidth: 3}), Plot.dot(trajectory.filter(d => d.year === year && d.IVI != null), {x: "year", y: "IVI", fill: "#000000", r: 6})]})
 ```
 
 ### Coverage and benchmark-life exposure

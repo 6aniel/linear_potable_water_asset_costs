@@ -1,7 +1,21 @@
-body { color: #183c43; }
-.navbar { background: #123f49 !important; }
-.card { border-color: #dce7e7; }
+body {
+  --bs-body-bg: #fff;
+  --bs-body-color: #000;
+  --bs-link-color: #000;
+  --bs-link-hover-color: #000;
+  background: #fff;
+  color: #000;
+}
+.navbar, .navbar .nav-link, .navbar-brand,
+.sidebar, .card, .card-header, .card-body {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+.navbar, .card { border: 1px solid #ddd; }
+.navbar .nav-link.active { border-bottom: 2px solid #000; }
+.navbar-toggler { color: #000; border-color: #000; }
 .card-header { font-weight: 600; }
-.metric { font-size: 2.1rem; font-weight: 650; color: #126b71; }
-.metric-label { color: #536b70; font-size: .9rem; }
-a { color: #126b71; }
+.metric { font-size: 2.1rem; font-weight: 650; color: #000; }
+.metric-label { color: #000; font-size: .9rem; }
+a, a:hover { color: #000; }
+input, select, button { accent-color: #000; }
