@@ -83,3 +83,7 @@ Install Quarto, then run `quarto preview` from this folder. No Python runtime is
 Run IVI.ipynb in the parent analysis project, then copy the three CSVs from Outputs/IVI into data/ and commit/push those changes. The files here are snapshots, not automatically synchronized with the parent project.
 
 The dashboard uses 2020 constant dollars and a fixed observed 2025 cohort. It describes assessed assets, not complete provincial networks. Raw pipe geometry and analysis notebooks are not required for website deployment.
+
+## Canada map
+
+The dashboard includes a CSD choropleth with year and map-extent controls. Darker shading means higher service-life consumption (100 × (1 − IVI)), or higher assessed replacement value when that metric is selected. Unshaded areas have no displayed estimate. Simplified 2021 Statistics Canada CSD boundaries are included in `data/assessed_csds.geojson`; provincial outlines derived from those boundaries are in `data/canada_provinces.geojson`. These are administrative areas, not pipe service areas.
