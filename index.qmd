@@ -142,7 +142,8 @@ const chart = Plot.plot({
     })
   ]
 });
-  const svg = chart.tagName.toLowerCase() === "svg" ? chart : chart.querySelector("svg");
+  const geoLayer = chart.querySelector('g[aria-label="geo"]');
+  const svg = geoLayer.ownerSVGElement;
   const layer = document.createElementNS("http://www.w3.org/2000/svg", "g");
   for (const child of [...svg.children]) {
     if (!["style", "defs"].includes(child.tagName.toLowerCase())) layer.append(child);
