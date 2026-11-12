@@ -1,4 +1,4 @@
-# Water infrastructure IVI dashboard
+# Canada Water infrastructure IVI dashboard
 
 Live site at: https://6aniel.github.io/linear_potable_water_asset_costs/
 
@@ -10,7 +10,6 @@ $$
 \mathrm{IVI}(t)
 = \frac{\mathrm{Current\ value}(t)}{\mathrm{Replacement\ cost}(t)}
 = \frac{\sum_{i=1}^{N} rc_{i,t}\left(\frac{rul_{i,t}}{eul_i}\right)}{\sum_{i=1}^{N} rc_{i,t}}
-\qquad \text{[Alegre et al. 1429, eqs. 1–2]}
 $$
 
 Here, $rc_{i,t}$ is asset $i$'s replacement cost, $rul_{i,t}$ is its residual useful life, and $eul_i$ is its expected useful life. We express IVI as a fraction from 0 to 1; multiplying by 100 expresses it as a percentage.
