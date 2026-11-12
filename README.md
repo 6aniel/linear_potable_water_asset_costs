@@ -42,7 +42,7 @@ $$
 = \frac{\sum_{i\in A_g}\ell_i c_{p(i)}\,\frac{\max(0,E_i-(t-y_i))}{E_i}}{\sum_{i\in A_g}\ell_i c_{p(i)}}
 $$
 
-The same eligible assets enter both sums. The denominator is their assessed replacement value, not the full provincial CCPI value. Municipal installation year and expected life are reconstructed as $$y_i=2025-\mathrm{age}_i$$ and $$E_i=\mathrm{age}_{i}+\text{remaining life}_{i,2025}$$ (stored as `exp_rem_life`); ODI supplies installation year and expected life directly. Evaluation years are 2025 and 2030, 2040, …, 2100, assuming no renewal, removal or future additions.
+The same eligible assets enter both sums. The denominator is their assessed replacement value, not the full provincial CCPI value. Municipal installation year and expected life are reconstructed as $`y_i=2025-\mathrm{age}_i`$ and $`E_i=\mathrm{age}_{i}+\text{remaining life}_{i,2025}`$ (stored as `exp_rem_life`); ODI supplies installation year and expected life directly. Evaluation years are 2025 and 2030, 2040, …, 2100, assuming no renewal, removal or future additions.
 
 Within each CSD or province, the uniform provincial cost rate cancels:
 
