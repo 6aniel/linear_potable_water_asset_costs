@@ -1,6 +1,6 @@
 # Water infrastructure IVI dashboard
 
-This folder is the repository root for https://github.com/6aniel/linear_potable_water_asset_costs.
+Live site at: https://6aniel.github.io/linear_potable_water_asset_costs/
 
 ## IVI formulation
 
